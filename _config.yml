@@ -1,0 +1,16 @@
+name: WoT
+markdown: kramdown
+
+navigation:
+ - title: W3C
+   url: /w3c/
+ - title: News & Events
+   url: /news-and-events/
+ - title: Developer
+   url: /developer/
+ - title: Liasons & Testimonals
+   url: /liasons/
+ - title: Specifications
+   url: /specifications/
+ - title: Contact
+   url: /contact/
