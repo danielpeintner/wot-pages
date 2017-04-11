@@ -5,9 +5,5 @@ body {
 
 .navbar {
   margin-bottom: 20px;
-  background-color: rgb(219,231,240);
-}
-
-.active > a {
-  background-color: rgb(0,90,156);
+  /* background-color: rgb(219,231,240); */
 }
