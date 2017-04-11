@@ -46,7 +46,7 @@
               <!-- <li class="active"><a href="/">Home</a></li>-->
 	    {% for link in site.navigation %}
 	        {% assign current = nil %}
-	        {% if page.url contains link.url %}
+	        {% if link.url contains page.url %}
 	            {% assign current = 'active' %}
 	        {% endif %}
 	        <li class="element {% if forloop.first %}first{% endif %} {{ current }} {% if forloop.last %}last{% endif %}">
