@@ -38,7 +38,10 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/wot-pages/">WoT</a>
+            <a class="navbar-brand" href="/wot-pages/">
+				<!-- WoT <br />-->
+				<img src="/wot-pages/images/logo-mini.svg" alt="WoT" width="100" />
+			</a>
 			
           </div>
           <div id="navbar" class="navbar-collapse collapse">
@@ -53,34 +56,34 @@
 			{% endif %}
 	        <li class="element {% if forloop.first %}first{% endif %} {{ current }} {% if forloop.last %}last{% endif %}">
 	            <a href="{{ link.url }}">{{ link.title }}</a>
+				
+				<ul class="dropdown-menu">
+				{% for entry in item.subfolderitems %}
+				  <li><a href="{{ entry.url }}">{{ entry.page }}</a></li>
+				{% endfor %}
+			  </ul>
 	        </li>
 			
 			<!-- link.url: {{ link.url }} -->
 			<!-- page.url: {{ page.url }} -->
 			
 	    {% endfor %}
-  
-              <!--<li><a href="/about/">About</a></li>
-              <li><a href="/contact/">Contact</a></li>-->
               
+			  <!--
               <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">WoT at W3C <span class="caret"></span></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">WoT at W3C<span class="caret"></span></a>
                 <ul class="dropdown-menu">
                   <li><a href="https://www.w3.org/WoT/" target="_blank">WoT</a></li>
                   <li><a href="https://www.w3.org/WoT/IG/" target="_blank">WoT Interest Group</a></li>
                   <li><a href="https://www.w3.org/WoT/WG/" target="_blank">WoT Working Group</a></li>
                   <li><a href="https://www.w3.org/community/wot/" target="_blank">WoT Community Group</a></li>
-                  
-                  <!--
-                  <li><a href="#">Something else here</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li class="dropdown-header">Nav header</li>
-                  <li><a href="#">Separated link</a></li>
-                  <li><a href="#">One more separated link</a></li>
-                  -->
                 </ul>
               </li>
+			  -->
+			  
             </ul>
+			
+			
 			<!--
             <ul class="nav navbar-nav navbar-right">
               <li class="active"><a href="./">Default <span class="sr-only">(current)</span></a></li>
@@ -92,11 +95,26 @@
         </div><!--/.container-fluid -->
 		
       </nav>
-			<div class="container">
+			<div class="container"  style="width:80%">
 			
 			{{ content }}
 			
 			</div><!-- /.container -->
+			
+			
+	<!-- Footer -->
+	<br /><br />
+	<footer class="page-footer font-small blue">
+	  <!-- Copyright -->
+	  <div class="footer-copyright text-center py-3">
+		© <a href="https://www.w3.org">W3C</a>
+		<br>
+        <a href="https://www.csail.mit.edu">MIT</a> · <a href="https://www.ercim.eu">ERCIM</a> · <a href="https://www.keio.ac.jp">Keio</a> · <a href="http://ev.buaa.edu.cn">Beihang</a>
+        <br>
+	  </div>
+	  <!-- Copyright -->
+	</footer>
+	<!-- Footer -->
 
 
     <!-- Bootstrap core JavaScript
