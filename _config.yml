@@ -1,6 +1,9 @@
 name: WoT
 markdown: kramdown
 
+# uncomment if in root
+baseurl: "/wot-pages"
+
 navigation:
  - title: W3C
    url: /wot-pages/w3c/
