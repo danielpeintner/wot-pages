@@ -15,12 +15,12 @@ navigation:
    url: /wot-pages/cg/
 # - title: News & Events
 #   url: /wot-pages/news-and-events/
- - title: Getting Started
-   url: /wot-pages/getting-started/
+# - title: Getting Started
+#   url: /wot-pages/getting-started/
  - title: Developers
    url: /wot-pages/developers/
- - title: Members
-   url: /wot-pages/members/
+# - title: Members
+#   url: /wot-pages/members/
 # - title: Liasons & Testimonals
 #   url: /wot-pages/liasons/
 # - title: Specifications
