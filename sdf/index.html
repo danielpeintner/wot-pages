@@ -3,43 +3,170 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>SDF</title>
+		<!-- highlight.js -->
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css">
 		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
 		<script>hljs.initHighlightingOnLoad();</script>
+		<!-- font-awesome -->
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" />
 	</head>
 	<body>
+	
+		<h1>SDF vs. TD</h1>
+		
+		
+		<h1>Example Comparison for <a href="https://github.com/mjkoster/ODM-Examples/blob/master/test-definitions/switch-enum-type.sdf.json">switch-enum-type.sdf.json</a> </h1>
 		<table>
 			<tr>
 				<th>SDF</th>
 				<th>TD</th>
 			</tr>
+
+
+
+
 			<tr>
 				<td>
-
 <pre><code class="json">		
 {
   "info": {
     "title": "Example file for ODM Simple JSON Definition Format", 
     "version": "20190424", 
-    "copyright": "Copyright 2019 Example Corp.\n        All rights reserved.", 
+    "copyright": "Copyright 2019 Example Corp. All rights reserved.", 
     "license": "http://example.com/license"
-  }, 
+  },
+</code></pre>						
+				</td>
+				<td>
+<pre><code class="json">		
+{
+    "id": "urn:dev:ops:32473-XXXX-1234",
+    "title": "Example file for ODM Simple JSON Definition Format",
+    // do not think this version is meant to be the same
+    "version":{
+        "instance": "20190424"
+    },
+    // copyright --> description?
+    "description": "Copyright 2019 Example Corp. All rights reserved.",
+    // license --> support?
+    "support": "http://example.com/license",
+</code></pre>	
+				</td>
+			</tr>
+			
+			
+			
+			
+			<tr>
+				<td>
+<pre><code class="json">		
   "namespace": {
     "st": "http://example.com/capability/odm"
-  }, 
+  },
   "defaultnamespace": "st", 
+</code></pre>						
+				</td>
+				<td>
+<pre><code class="json">
+    "@context": [
+        "https://www.w3.org/2019/wot/td/v1",	// default namespace
+        { "st": "http://example.com/capability/odm" }  // other namespaces
+    ],
+</code></pre>	
+				</td>
+			</tr>
+			
+			
+			
+			
+			
+			<tr>
+				<td>
+<pre><code class="json">		
   "odmObject": {
     "Switch": {
+</code></pre>						
+				</td>
+				<td>
+<pre><code class="json">
+    // name "switch" as part of property/action/event
+</code></pre>	
+				</td>
+			</tr>
+			
+			
+			<tr>
+				<td>
+<pre><code class="json">		
       "odmAction": {
         "On": { "description": "Action to turn the switch on" }, 
         "Off": { "description": "Action to turn the switch off" }
       },
+</code></pre>						
+				</td>
+				<td>
+<pre><code class="json">
+    "actions": {
+        "SwitchOn": {
+            "description": "Action to turn the switch on",
+            // forms optional in TD template
+            "forms": [{
+                "href": "https://mylamp.example.com/switchOn"
+            }]
+        },
+        "SwitchOff": {
+            "description": "Action to turn the switch off",
+            // forms optional in TD template
+            "forms": [{
+                "href": "https://mylamp.example.com/switchOff"
+            }]
+        }
+    },
+</code></pre>	
+				</td>
+			</tr>
+			
+			
+			
+			
+			<tr>
+				<td>
+<pre><code class="json">		
       "odmProperty": {
         "State": {
           "description": "The state of the switch, whether on or off",
           "odmRef": "#/odmObject/Switch/odmData/StateData"
         }
       }, 
+</code></pre>						
+				</td>
+				<td>
+<pre><code class="json">
+    "properties": {
+        "SwitchState": {
+            "description": "The state of the switch, whether on or off",
+            "type": "string",
+            "oneOf": [
+                { "type": "string", "const": "on", "description": "The on state"},
+                { "type": "string", "const": "off", "description": "The off state"}
+            ],
+            // forms optional in TD template
+            "forms": [{
+                "href": "https://mylamp.example.com/switchState"
+            }]
+        }
+    }
+</code></pre>	
+				</td>
+			</tr>
+			
+			
+			
+			
+			
+			<tr>
+				<td>
+<pre><code class="json">		
       "odmData": {
         "StateData": {
           "odmEnum": {
@@ -56,13 +183,819 @@
           }
         }
       }
-    }
-  }
-}
 </code></pre>						
 				</td>
-				<td>Smith</td>
+				<td>
+<pre><code class="json">
+    // "data" part of property/action/event
+    // Note: TD plans to provide global definitions to allow references
+</code></pre>	
+				</td>
 			</tr>
+			
+			
+			
+			
+			
+			
+			
+			
+			<tr>
+				<td>
+<pre><code class="json">		
+    }
+  }
+</code></pre>						
+				</td>
+				<td>
+<pre><code class="json">
+  }
+</code></pre>	
+				</td>
+			</tr>
+			
+
+			
+			
 		</table>
+		
+			
+		<h1>Features</h1>
+		
+		<p>A SDF definition file has two sections, the information block and the definitions section.</p>
+		
+		<h2>Information block</h2>
+		
+<table>
+<thead>
+<tr>
+<th>Quality</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+<th>TD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>title</td>
+<td>string</td>
+<td>yes</td>
+<td>A short summary to be displayed in search results, etc.</td>
+<td><i class="fas fa-check"></i></td>
+</tr>
+<tr>
+<td>version</td>
+<td>string</td>
+<td>yes</td>
+<td>The incremental version of the definition, format TBD</td>
+<td><i class="fas fa-not-equal"></i></td>
+</tr>
+<tr>
+<td>copyright</td>
+<td>string</td>
+<td>yes</td>
+<td>Link to text or embedded text containing a copyright notice</td>
+<td><i class="fas fa-question"></i></td>
+</tr>
+<tr>
+<td>license</td>
+<td>string</td>
+<td>yes</td>
+<td>Link to text or embedded text containing license terms</td>
+<td><i class="fas fa-question"></i></td>
+</tr>
+</tbody>
+</table>
+
+	<h2>Definitions block</h2>
+<table>
+<thead>
+<tr>
+<th>Quality</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+<th>TD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>namespace</td>
+<td>map</td>
+<td>no</td>
+<td>Defines short names mapped to namespace URIs, to be used as identifier prefixes</td>
+<td><i class="fas fa-question"></i> @context</td>
+</tr>
+<tr>
+<td>defaultnamespace</td>
+<td>string</td>
+<td>no</td>
+<td>Identifies one of the prefixes in the namespace map to be used as a default in resolving identifiers</td>
+<td><i class="fas fa-question"></i> @context</td>
+</tr>
+</tbody>
+</table>
+
+
+		<h2><a herf="https://github.com/one-data-model/language/blob/master/sdf.md#odmobject">odmObject</a></h2>
+		
+<table>
+<thead>
+<tr>
+<th>Quality</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+<th>Default</th>
+<th>TD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>no</td>
+<td>human readable name</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>description</td>
+<td>string</td>
+<td>no</td>
+<td>human readable description</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>title</td>
+<td>string</td>
+<td>no</td>
+<td>human readable title to display</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>$comment</td>
+<td>string</td>
+<td>no</td>
+<td>explanatory comments</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>odmRef</td>
+<td>object</td>
+<td>no</td>
+<td>reference to a definition to be used as a template for a new definition</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>odmRequired</td>
+<td>array</td>
+<td>no</td>
+<td>Array of JSON Pointers to mandatory items in a valid definition</td>
+<td>N/A</td>
+</tr>
+</tbody>
+</table>
+		
+		
+		
+		<h2><a herf="https://github.com/one-data-model/language/blob/master/sdf.md#odmproperty">odmProperty</a></h2>
+		
+<table>
+<thead>
+<tr>
+<th>Quality</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+<th>Default</th>
+<th>TD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>no</td>
+<td>human readable name</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>description</td>
+<td>string</td>
+<td>no</td>
+<td>human readable description</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>title</td>
+<td>string</td>
+<td>no</td>
+<td>human readable title to display</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>$comment</td>
+<td>string</td>
+<td>no</td>
+<td>explanatory comments</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>odmRequired</td>
+<td>array</td>
+<td>no</td>
+<td>Array of JSON Pointers to mandatory items in a valid definition</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>odmRef</td>
+<td>object</td>
+<td>no</td>
+<td>reference to a definition to be used as a template for a new definition</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>readable</td>
+<td>boolean</td>
+<td>no</td>
+<td>Reads are allowed</td>
+<td>true</td>
+</tr>
+<tr>
+<td>writable</td>
+<td>boolean</td>
+<td>no</td>
+<td>Writes are allowed</td>
+<td>true</td>
+</tr>
+<tr>
+<td>observable</td>
+<td>boolean</td>
+<td>no</td>
+<td>flag to indicate asynchronous notification is available</td>
+<td>true</td>
+</tr>
+<tr>
+<td>contentFormat</td>
+<td>string</td>
+<td>no</td>
+<td>IANA media type string</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>subtype</td>
+<td>string</td>
+<td>no</td>
+<td>subtype enumeration</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>widthInBits</td>
+<td>integer</td>
+<td>no</td>
+<td>hint for protocol binding</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>units</td>
+<td>string</td>
+<td>no</td>
+<td><a href="https://www.iana.org/assignments/senml/senml.xhtml#senml-units" rel="nofollow">SenML unit</a> code</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>nullable</td>
+<td>boolean</td>
+<td>no</td>
+<td>indicates a null value is available for this type</td>
+<td>true</td>
+</tr>
+<tr>
+<td>scaleMinimum</td>
+<td>number</td>
+<td>no</td>
+<td>lower limit of value in units</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>scaleMaximum</td>
+<td>number</td>
+<td>no</td>
+<td>upper limit of value in units</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>type</td>
+<td>string, enum</td>
+<td>no</td>
+<td>JSON data type</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>minimum</td>
+<td>number</td>
+<td>no</td>
+<td>lower limit of value in the representation format</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>maximum</td>
+<td>number</td>
+<td>no</td>
+<td>upper limit of value in the representation format</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>multipleOf</td>
+<td>number</td>
+<td>no</td>
+<td>indicates the resolution of the number in representation format</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>enum</td>
+<td>array</td>
+<td>no</td>
+<td>enumeration constraint</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>pattern</td>
+<td>string</td>
+<td>no</td>
+<td>regular expression to constrain a string pattern</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>format</td>
+<td>string</td>
+<td>no</td>
+<td><a href="https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-7.3" rel="nofollow">JSON Schema formats</a></td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>minLength</td>
+<td>integer</td>
+<td>no</td>
+<td>shortest length string in octets</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>maxLength</td>
+<td>integer</td>
+<td>no</td>
+<td>longest length string in octets</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>default</td>
+<td>number, boolean, string</td>
+<td>no</td>
+<td>specifies the default value for initialization</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>const</td>
+<td>number, boolean, string</td>
+<td>no</td>
+<td>specifies a constant value for a data item or property</td>
+<td>N/A</td>
+</tr>
+</tbody>
+</table>
+		
+		
+		
+		
+		
+		<h2><a herf="https://github.com/one-data-model/language/blob/master/sdf.md#odmaction">odmAction</a></h2>
+		
+<table>
+<thead>
+<tr>
+<th>Quality</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+<th>TD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>no</td>
+<td>human readable name</td>
+</tr>
+<tr>
+<td>description</td>
+<td>string</td>
+<td>no</td>
+<td>human readable description</td>
+</tr>
+<tr>
+<td>title</td>
+<td>string</td>
+<td>no</td>
+<td>human readable title to display</td>
+</tr>
+<tr>
+<td>$comment</td>
+<td>string</td>
+<td>no</td>
+<td>explanatory comments</td>
+</tr>
+<tr>
+<td>odmRequired</td>
+<td>array</td>
+<td>no</td>
+<td>Array of JSON Pointers to mandatory items in a valid action definition</td>
+</tr>
+<tr>
+<td>odmInputData</td>
+<td>array</td>
+<td>no</td>
+<td>Array of JSON Pointers to mandatory items in a valid action definition</td>
+</tr>
+<tr>
+<td>odmRequiredInputData</td>
+<td>array</td>
+<td>no</td>
+<td>Array of JSON Pointers to mandatory items in a valid action definition</td>
+</tr>
+<tr>
+<td>odmOutputData</td>
+<td>array</td>
+<td>no</td>
+<td>Array of JSON Pointers to mandatory items in a valid action definition</td>
+</tr>
+<tr>
+<td>odmRef</td>
+<td>object</td>
+<td>no</td>
+<td>reference to a definition to be used as a template for a new definition</td>
+</tr>
+</tbody>
+</table>
+		
+		
+		
+		
+		
+		
+		<h2><a herf="https://github.com/one-data-model/language/blob/master/sdf.md#odmevent">odmEvent</a></h2>
+		
+<table>
+<thead>
+<tr>
+<th>Quality</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+<th>TD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>no</td>
+<td>human readable name</td>
+</tr>
+<tr>
+<td>description</td>
+<td>string</td>
+<td>no</td>
+<td>human readable description</td>
+</tr>
+<tr>
+<td>title</td>
+<td>string</td>
+<td>no</td>
+<td>human readable title to display</td>
+</tr>
+<tr>
+<td>$comment</td>
+<td>string</td>
+<td>no</td>
+<td>explanatory comments</td>
+</tr>
+<tr>
+<td>odmOutputData</td>
+<td>array</td>
+<td>no</td>
+<td>Array of JSON Pointers to output items in a valid definition</td>
+</tr>
+<tr>
+<td>odmRequired</td>
+<td>array</td>
+<td>no</td>
+<td>Array of JSON Pointers to mandatory items in a valid definition</td>
+</tr>
+<tr>
+<td>odmRef</td>
+<td>object</td>
+<td>no</td>
+<td>reference to a definition to be used as a template for a new definition</td>
+</tr>
+</tbody>
+</table>
+		
+		
+		
+		
+		
+		
+		
+		<h2><a herf="https://github.com/one-data-model/language/blob/master/sdf.md#odmdata">odmData</a></h2>
+		
+<table>
+<thead>
+<tr>
+<th>Quality</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+<th>TD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>no</td>
+<td>human readable name</td>
+</tr>
+<tr>
+<td>description</td>
+<td>string</td>
+<td>no</td>
+<td>human readable description</td>
+</tr>
+<tr>
+<td>title</td>
+<td>string</td>
+<td>no</td>
+<td>human readable title to display</td>
+</tr>
+<tr>
+<td>$comment</td>
+<td>string</td>
+<td>no</td>
+<td>explanatory comments</td>
+</tr>
+<tr>
+<td>required</td>
+<td>array</td>
+<td>no</td>
+<td>list of references to mandatory items in a valid definition</td>
+</tr>
+<tr>
+<td>odmRef</td>
+<td>object</td>
+<td>no</td>
+<td>reference to a definition to be used as a template for a new definition</td>
+</tr>
+<tr>
+<td>type</td>
+<td>object</td>
+<td>no</td>
+<td>reference to a definition to be used as a template for a new definition</td>
+</tr>
+<tr>
+<td>subtype</td>
+<td>string</td>
+<td>no</td>
+<td>subtype enumeration</td>
+</tr>
+<tr>
+<td>widthInBits</td>
+<td>integer</td>
+<td>no</td>
+<td>hint for protocol binding</td>
+</tr>
+<tr>
+<td>units</td>
+<td>string</td>
+<td>no</td>
+<td><a href="https://www.iana.org/assignments/senml/senml.xhtml#senml-units" rel="nofollow">SenML unit</a> code</td>
+</tr>
+<tr>
+<td>nullable</td>
+<td>boolean</td>
+<td>no</td>
+<td>indicates a null value is available for this type</td>
+</tr>
+<tr>
+<td>scaleMinimum</td>
+<td>number</td>
+<td>no</td>
+<td>lower limit of value in units</td>
+</tr>
+<tr>
+<td>scaleMaximum</td>
+<td>number</td>
+<td>no</td>
+<td>upper limit of value in units</td>
+</tr>
+<tr>
+<td>type</td>
+<td>string, enum</td>
+<td>yes</td>
+<td>JSON data type</td>
+</tr>
+<tr>
+<td>minimum</td>
+<td>number</td>
+<td>no</td>
+<td>lower limit of value in the representation format</td>
+</tr>
+<tr>
+<td>maximum</td>
+<td>number</td>
+<td>no</td>
+<td>upper limit of value in the representation format</td>
+</tr>
+<tr>
+<td>multipleOf</td>
+<td>number</td>
+<td>no</td>
+<td>indicates the resolution of the number in representation format</td>
+</tr>
+<tr>
+<td>enum</td>
+<td>array of any type</td>
+<td>no</td>
+<td>enumeration constraint</td>
+</tr>
+<tr>
+<td>pattern</td>
+<td>string</td>
+<td>no</td>
+<td>regular expression to constrain a string pattern</td>
+</tr>
+<tr>
+<td>format</td>
+<td>string</td>
+<td>no</td>
+<td><a href="https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-7.3" rel="nofollow">JSON Schema formats</a></td>
+</tr>
+<tr>
+<td>minLength</td>
+<td>integer</td>
+<td>no</td>
+<td>shortest length string in octets</td>
+</tr>
+<tr>
+<td>maxLength</td>
+<td>integer</td>
+<td>no</td>
+<td>longest length string in octets</td>
+</tr>
+<tr>
+<td>default</td>
+<td>number, boolean, string</td>
+<td>no</td>
+<td>specifies the default value for initialization</td>
+</tr>
+<tr>
+<td>const</td>
+<td>number, boolean, string</td>
+<td>no</td>
+<td>specifies a constant value for a data item or property</td>
+</tr>
+</tbody>
+</table>
+		
+		
+		
+		
+		
+		
+		
+		
+		<h2><a herf="https://github.com/one-data-model/language/blob/master/sdf.md#odmthing">odmThing</a></h2>
+		
+<table>
+<thead>
+<tr>
+<th>Quality</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+<th>TD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>no</td>
+<td>human readable name</td>
+</tr>
+<tr>
+<td>description</td>
+<td>string</td>
+<td>no</td>
+<td>human readable description</td>
+</tr>
+<tr>
+<td>title</td>
+<td>string</td>
+<td>no</td>
+<td>human readable title to display</td>
+</tr>
+<tr>
+<td>$comment</td>
+<td>string</td>
+<td>no</td>
+<td>explanatory comments</td>
+</tr>
+<tr>
+<td>odmRequired</td>
+<td>array</td>
+<td>no</td>
+<td>Array of JSON Pointers to mandatory items in a valid definition</td>
+</tr>
+<tr>
+<td>odmRef</td>
+<td>object</td>
+<td>no</td>
+<td>reference to a definition to be used as a template for a new definition</td>
+</tr>
+</tbody>
+</table>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<h2><a herf="https://github.com/one-data-model/language/blob/master/sdf.md#odmproduct">odmProduct</a></h2>
+
+<table>
+<thead>
+<tr>
+<th>Quality</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+<th>TD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>no</td>
+<td>human readable name</td>
+</tr>
+<tr>
+<td>description</td>
+<td>string</td>
+<td>no</td>
+<td>human readable description</td>
+</tr>
+<tr>
+<td>title</td>
+<td>string</td>
+<td>no</td>
+<td>human readable title to display</td>
+</tr>
+<tr>
+<td>$comment</td>
+<td>string</td>
+<td>no</td>
+<td>explanatory comments</td>
+</tr>
+<tr>
+<td>odmRequired</td>
+<td>array</td>
+<td>no</td>
+<td>Array of JSON Pointers to mandatory items in a valid definition</td>
+</tr>
+<tr>
+<td>odmRef</td>
+<td>object</td>
+<td>no</td>
+<td>reference to a definition to be used as a template for a new definition</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+		<h2>Open Questions</h2>
+		<ul>
+			<li>reason of having multiple odmObject definitions --> TD does not have such additional wrapping</li>
+			<li>odmData?</li>
+		</ul>
+
 	</body>
 </html>
